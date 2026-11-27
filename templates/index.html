@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TokenWise – cut AI token costs</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="shell">
+
+  <aside class="rail">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="#fff" stroke-width="2"/><path d="M9 20l4-6 4 3 6-8" fill="none" stroke="#7fe3b5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><b>TokenWise</b><small>AI cost optimizer</small></div>
+    </div>
+    <nav id="nav" aria-label="Sections">
+      <button data-tab="play" class="on"><i>⚡</i>Playground</button>
+      <button data-tab="kb"><i>📚</i>Knowledge base</button>
+      <button data-tab="stats"><i>📈</i>Analytics</button>
+      <button data-tab="how"><i>🧭</i>How it works</button>
+    </nav>
+    <div class="rail-foot">
+      <span id="modePill" class="pill">demo mode</span>
+      <p>B.Tech CSE final-year project</p>
+    </div>
+  </aside>
+
+  <main>
+    <!-- ============ PLAYGROUND ============ -->
+    <section id="tab-play" class="tab on">
+      <header class="page-head">
+        <h1>Ask once, pay for less.</h1>
+        <p>Run any prompt through six token-saving techniques and see the bill before and after.</p>
+      </header>
+
+      <div class="play-grid">
+        <!-- composer -->
+        <div class="composer card">
+          <label class="lbl" for="prompt">Your prompt</label>
+          <textarea id="prompt" rows="6" placeholder="Type a question about the documents in your knowledge base…"></textarea>
+          <div class="chips" id="examples">
+            <button type="button" data-ex="0">Polite & wordy</button>
+            <button type="button" data-ex="1">Simple question</button>
+            <button type="button" data-ex="2">Complex strategy</button>
+          </div>
+
+          <div class="sep"></div>
+          <div class="lbl">Techniques</div>
+          <ul class="switches" id="switches">
+            <li><label><input type="checkbox" data-t="prompt" checked><span class="sw"></span><span><b>Prompt optimization</b><em>Cut filler words and a bloated system prompt</em></span></label></li>
+            <li><label><input type="checkbox" data-t="cache" checked><span class="sw"></span><span><b>Smart system design</b><em>Reuse answers to similar questions</em></span></label></li>
+            <li><label><input type="checkbox" data-t="output" checked><span class="sw"></span><span><b>Output control</b><em>Limit the answer’s length</em></span></label></li>
+            <li><label><input type="checkbox" data-t="rag" checked><span class="sw"></span><span><b>Chunking & retrieval</b><em>Send only the relevant chunks</em></span></label></li>
+            <li><label><input type="checkbox" data-t="model" checked><span class="sw"></span><span><b>Model selection</b><em>Small model for easy tasks</em></span></label></li>
+            <li><label><input type="checkbox" data-t="post" checked><span class="sw"></span><span><b>Post-processing</b><em>Format with code, not AI</em></span></label></li>
+          </ul>
+
+          <div class="sep"></div>
+          <div class="row2">
+            <div>
+              <div class="lbl">Answer format</div>
+              <div class="seg" id="fmt"><button data-v="text" class="on">Text</button><button data-v="bullets">Bullets</button><button data-v="json">JSON</button></div>
+            </div>
+            <div>
+              <div class="lbl">Model</div>
+              <div class="seg" id="mdl"><button data-v="auto" class="on">Auto</button><button data-v="small">S</button><button data-v="medium">M</button><button data-v="large">L</button></div>
+            </div>
+          </div>
+          <div class="row2">
+            <div>
+              <label class="lbl" for="maxw">Max words <small>(blank = auto)</small></label>
+              <input id="maxw" type="number" min="10" max="800" placeholder="auto">
+            </div>
+            <div>
+              <label class="lbl" for="topk">Chunks to retrieve</label>
+              <input id="topk" type="number" min="1" max="10" value="3">
+            </div>
+          </div>
+          <div class="lbl" style="margin-top:14px">Documents used</div>
+          <div class="chips docs" id="docPick"></div>
+
+          <button id="run" class="run"><span>Optimize & run</span><kbd>Ctrl ↵</kbd></button>
+          <p id="err" class="err" role="alert" hidden></p>
+        </div>
+
+        <!-- results -->
+        <div class="results" id="results">
+          <div class="empty card" id="empty">
+            <div class="empty-art" aria-hidden="true">
+              <span class="tk t1">Please</span><span class="tk t2">kindly</span><span class="tk t3">really</span><span class="tk t4">basically</span>
+            </div>
+            <h2>Your receipt will print here</h2>
+            <p>Pick an example prompt on the left and press <b>Optimize & run</b>. Then switch techniques off one at a time to see which one saves the most.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ KNOWLEDGE BASE ============ -->
+    <section id="tab-kb" class="tab">
+      <header class="page-head"><h1>Knowledge base</h1><p>Documents are split into chunks and indexed. Only the chunks that match a question are sent to the model.</p></header>
+      <div class="kb-grid">
+        <div class="card">
+          <h3>Indexed documents</h3>
+          <div id="docList" class="doclist"></div>
+        </div>
+        <div class="card">
+          <h3>Add a document</h3>
+          <label class="lbl" for="docName">Name</label>
+          <input id="docName" type="text" placeholder="e.g. college-handbook.txt">
+          <label class="lbl" for="docText" style="margin-top:12px">Text</label>
+          <textarea id="docText" rows="9" placeholder="Paste text here, or load a .txt / .md file below."></textarea>
+          <div class="btnrow">
+            <label class="btn ghost" for="docFile">Load .txt / .md file</label>
+            <input id="docFile" type="file" accept=".txt,.md" hidden>
+            <button id="docAdd" class="btn">Add to knowledge base</button>
+          </div>
+          <p id="docMsg" class="hint"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ANALYTICS ============ -->
+    <section id="tab-stats" class="tab">
+      <header class="page-head"><h1>Analytics</h1><p>Everything you ran in this session, compared with an un-optimized baseline.</p></header>
+      <div class="tiles" id="tiles"></div>
+      <div class="stat-grid">
+        <div class="card"><h3>Tokens per request</h3><div id="chartTokens"></div></div>
+        <div class="card"><h3>Where the savings came from</h3><div id="chartWf"></div></div>
+        <div class="card"><h3>Models used</h3><div id="chartTier"></div></div>
+        <div class="card"><h3>Recent requests</h3><div id="histTable" class="tablewrap"></div></div>
+      </div>
+      <button id="resetStats" class="btn ghost">Clear history and cache</button>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section id="tab-how" class="tab">
+      <header class="page-head"><h1>How it works</h1><p>Six techniques, each in its own Python module. Every request is billed against a baseline that uses none of them.</p></header>
+      <div class="how">
+        <article><span class="n">1</span><h3>Prompt optimization</h3><p>Regex rules remove politeness and filler, shorten wordy phrases and drop repeated sentences. A short system prompt replaces the long default.</p><code>optimizer/prompt_optimizer.py</code></article>
+        <article><span class="n">2</span><h3>Smart system design</h3><p>A semantic cache compares a new question with stored ones using cosine similarity. A hit costs zero tokens and returns in milliseconds.</p><code>optimizer/cache.py</code></article>
+        <article><span class="n">3</span><h3>Output control</h3><p>The model is told the exact word limit and a hard <i>max_tokens</i> is set. Output tokens cost 3–5× more than input tokens.</p><code>optimizer/output_control.py</code></article>
+        <article><span class="n">4</span><h3>Chunking & retrieval</h3><p>Documents become overlapping sentence-aware chunks, ranked with BM25. Only the top-k chunks go into the prompt.</p><code>optimizer/rag.py</code></article>
+        <article><span class="n">5</span><h3>Model selection</h3><p>A complexity score (0–100) sends easy tasks to the small model and hard ones to the large model. The reasons are shown on every result.</p><code>optimizer/router.py</code></article>
+        <article><span class="n">6</span><h3>Post-processing</h3><p>Code strips filler, trims to the word limit, builds bullets and JSON. The model only writes plain text, which is cheaper.</p><code>optimizer/postprocess.py</code></article>
+      </div>
+      <div class="card formula">
+        <h3>How savings are calculated</h3>
+        <p>Baseline = verbose system prompt + raw prompt + <b>every</b> document + the large model + an unlimited answer. Savings are attributed in order (prompt → retrieval → output → model), so the five numbers always add up to the total. Prices are in <code>optimizer/config.py</code>.</p>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
