@@ -1,0 +1,9 @@
+A token is the basic unit of text that a large language model reads and writes. A token is usually a short word or a fragment of a longer word, so one English word is on average about 1.3 tokens. Providers bill every request by counting input tokens and output tokens separately. Output tokens are normally three to five times more expensive than input tokens, so a long answer costs far more than a long question.
+
+The context window is the maximum number of tokens a model can handle in one request, covering the system prompt, the conversation history, the retrieved documents and the answer. Filling the context window with unnecessary text increases cost and latency, and it can even reduce answer quality because the model has to search through noise. Many applications waste money because they resend the same instructions and the same documents with every request.
+
+Prompt optimization means writing short, specific instructions. Polite filler such as please, kindly and thank you, repeated sentences and long background stories add tokens without adding meaning. A prompt that says summarize this in three points is cheaper and clearer than a long paragraph asking the same thing. Removing filler words from a prompt can cut input tokens by twenty to forty percent without changing the answer.
+
+Output control means limiting the size of the response. Instructions such as answer in fifty words or return JSON only tell the model exactly how much to write. Developers should also set the max tokens parameter, which is a hard limit that stops generation. Because output tokens are the most expensive part of a request, controlling output length usually gives the largest saving per change.
+
+Teams should measure token usage for every request and log the cost. Dashboards that compare the baseline cost with the optimized cost make it easy to prove that the optimization works and to find the prompts that waste the most money.
