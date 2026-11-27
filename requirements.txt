@@ -1,0 +1,6 @@
+Flask>=3.0
+gunicorn>=21.2
+# Optional – only needed for LIVE mode (real LLM calls):
+# anthropic>=0.40
+# Optional – exact token counts instead of the built-in estimator:
+# tiktoken>=0.7
