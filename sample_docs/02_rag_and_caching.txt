@@ -1,0 +1,9 @@
+Retrieval augmented generation, or RAG, solves the problem of sending whole documents to a model. Instead of placing a full manual, report or database export inside the prompt, the system splits the document into small chunks and stores them in an index. When a question arrives, the retriever finds only the chunks that are relevant and sends just those to the model. This single technique can reduce input tokens by seventy percent or more on long documents.
+
+Chunking splits text into pieces of a fixed size, usually fifty to five hundred words. Good chunking respects sentence boundaries and keeps a small overlap between neighbouring chunks so that no idea is cut in half. Each chunk is then indexed. Keyword scoring methods such as BM25 rank chunks by how often the query terms appear, while embedding based search ranks chunks by meaning using vectors. Many production systems combine both methods.
+
+Caching avoids paying for the same answer twice. An exact cache stores the answer for an identical prompt. A semantic cache goes further and returns a stored answer when a new question has nearly the same meaning as an old one, which it detects with a similarity score such as cosine similarity. A cache hit costs zero tokens and responds in a few milliseconds, which makes the application both cheaper and faster.
+
+Reusable context should be stored separately from the user question. Examples are the system prompt, product documentation, user profile facts and conversation memory. Storing this information in a memory layer or an embedding store means it is fetched only when needed instead of being sent again and again. Some providers also offer prompt caching, which gives a discount on repeated prompt prefixes.
+
+Good system design therefore treats tokens as a budget. Every piece of text that enters the prompt must earn its place by being relevant to the current question.
